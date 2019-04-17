@@ -44,7 +44,7 @@ public class TemplateActivity extends AppCompatActivity {
         setContentView(R.layout.activity_template);
 
         String type = getIntent().getStringExtra("type");
-        int id = getIntent().getIntExtra("id",0);
+        int id = 0;
 
         back_switch = findViewById(R.id.back_switch);
         select_template = findViewById(R.id.select_template);
@@ -53,18 +53,20 @@ public class TemplateActivity extends AppCompatActivity {
 
         String date = getIntent().getStringExtra("date");
 
-//        Log.i("Template",templates.get(0).getTemplate());
-//        Log.i("Drawable",drawables.get(0).toString());
-//        Log.i("TemplateAct", ""+getIntent().getIntExtra("id",0));
         if(getIntent().getStringExtra("Edit")!=null) {
 
             type = "edit";
             id = getIntent().getIntExtra("ScheduleId",0);
-        }
+            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, id, date);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        }else{
 
-        TemplateAdapter adapter = new TemplateAdapter(drawables,getApplicationContext(),type,id,date);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+            ArrayList<Integer> empIds = getIntent().getIntegerArrayListExtra("empIds");
+            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, empIds, date);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+            recyclerView.setAdapter(adapter);
+        }
 
 
         back_switch.setOnClickListener(new View.OnClickListener() {

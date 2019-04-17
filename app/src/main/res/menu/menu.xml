@@ -5,7 +5,7 @@
     <item
         android:id="@+id/lock"
         android:title="lock"
-        android:icon="@drawable/ic_lock"
+        android:icon="@drawable/logout"
         app:showAsAction="ifRoom"
         />
 

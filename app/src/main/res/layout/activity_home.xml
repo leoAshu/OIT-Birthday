@@ -85,20 +85,37 @@
         <Button
             android:id="@+id/schedule_birthday"
             android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginTop="55dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/edittext_round"
-            android:drawableLeft="@drawable/birthday_cake1_icon"
-            android:paddingLeft="40dp"
-            android:text="View Scheduled Birthdays"
+            android:drawableLeft="@drawable/cake"
+            android:paddingLeft="50dp"
+            android:text=" View Scheduled Birthdays"
+            android:textAlignment="textStart"
             android:textAllCaps="false"
+            android:textColor="#0b3450"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <Button
+            android:id="@+id/makeWish"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/buttonedit"
+            android:onClick="makeWish"
+            android:text="Make Wish"
+            android:textAllCaps="false"
+            android:textColor="#ffffff"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@+id/schedule_birthday"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 

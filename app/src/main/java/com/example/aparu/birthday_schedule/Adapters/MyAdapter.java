@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aparu.birthday_schedule.Activities.HomeActivity;
 import com.example.aparu.birthday_schedule.Activities.TemplateActivity;
 import com.example.aparu.birthday_schedule.Models.Employee;
 import com.example.aparu.birthday_schedule.Models.ListItem;
@@ -33,13 +35,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Context context;
     private ArrayList<Employee> employees;
     private String type;
-    private String date;
+    ButtonStatus buttonStatus;
+    static int count=0;
 
-    public MyAdapter(ArrayList<Employee> employees, Context context, String type, String date) {
+    public interface ButtonStatus{
+
+        void update(int count);
+    }
+
+    public MyAdapter(ArrayList<Employee> employees, Context context, String type, ButtonStatus buttonStatus) {
         this.employees = employees;
         this.context = context;
         this.type = type;
-        this.date = date;
+        this.buttonStatus = buttonStatus;
+    }
+
+    public static void reset(){
+        count = 0;
     }
 
     @Override
@@ -62,40 +74,34 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
-
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         if(employees.size()!=0){
 
             holder.user_name.setText(employees.get(position).getEmp_name());
 
-            Log.i("",employees.get(position).getEmp_name());
-            Log.i("Status",employees.get(position).getEmail_sent_status().toString());
-
             if(employees.get(position).getEmail_sent_status() == true || employees.get(position).getScheduled_birthday_status() == true){
                 holder.status.setVisibility(View.VISIBLE);
-                holder.make_wish.setVisibility(View.INVISIBLE);
+                holder.checkBox.setVisibility(View.INVISIBLE);
             }
 
-
-            holder.make_wish.setOnClickListener(new View.OnClickListener() {
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
-                    Toast.makeText(v.getContext(), "Click on Item: " + employees.get(position).getEmp_name(), Toast.LENGTH_SHORT).show();
-                    Log.i("Emp-id",""+employees.get(position).getId());
-                    Intent template = new Intent(context, TemplateActivity.class);
-                    template.putExtra("type",type);
-                    template.putExtra("id",employees.get(position).getId());
-                    template.putExtra("date",date);
-                    context.startActivity(template);
+                    if(holder.checkBox.isChecked()){
 
+                        count++;
+                        buttonStatus.update(count);
+                        employees.get(position).setSelected(true);
+                    }else{
+
+                        count--;
+                        buttonStatus.update(count);
+                        employees.get(position).setSelected(false);
+                    }
                 }
             });
-            if(employees.get(position).getEmp_name().equalsIgnoreCase("No Birthdays")){
-
-                holder.make_wish.setEnabled(false);
-            }
         }
     }
 
@@ -109,8 +115,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         public ImageView profile_pic;
         public TextView user_name;
-        public Button make_wish;
-        public  ImageView status;
+        public ImageView status;
+        public CheckBox checkBox;
 
 
         public ViewHolder(View itemView) {
@@ -118,10 +124,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
             profile_pic = itemView.findViewById(R.id.profile_pic);
             user_name = itemView.findViewById(R.id.user_name);
-            make_wish = itemView.findViewById(R.id.make_wish);
             status = itemView.findViewById(R.id.imageView);
+            checkBox = itemView.findViewById(R.id.checkBox);
 
         }
     }
+
 
 }

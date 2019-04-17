@@ -18,6 +18,8 @@ public class Employee {
 
     int template_id;
 
+    Boolean isSelected;
+
     public Employee(int id, String emp_id, String emp_name, String emp_dob, Boolean email_sent_status, Boolean status, Boolean scheduled_birthday_status, int template_id) {
         this.id = id;
         this.emp_id = emp_id;
@@ -27,6 +29,7 @@ public class Employee {
         this.status = status;
         this.scheduled_birthday_status = scheduled_birthday_status;
         this.template_id = template_id;
+        this.isSelected = false;
     }
 
     public int getId() {
@@ -91,5 +94,13 @@ public class Employee {
 
     public void setTemplate_id(int template_id) {
         this.template_id = template_id;
+    }
+
+    public Boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(Boolean selected) {
+        isSelected = selected;
     }
 }

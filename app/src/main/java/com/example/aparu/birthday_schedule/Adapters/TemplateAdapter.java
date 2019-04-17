@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.aparu.birthday_schedule.Activities.HomeActivity;
 import com.example.aparu.birthday_schedule.Activities.Message_Activity;
 import com.example.aparu.birthday_schedule.Activities.TemplateActivity;
 import com.example.aparu.birthday_schedule.Models.Employee;
@@ -27,6 +28,16 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
     String type;
     int id;
     String date;
+    ArrayList<Integer> empIds;
+
+    public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, ArrayList<Integer> empIds, String date) {
+
+        this.templates = templates;
+        this.context = context;
+        this.type = type;
+        this.date = date;
+        this.empIds = empIds;
+    }
 
     public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, int id, String date) {
 
@@ -35,6 +46,7 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
         this.type = type;
         this.id = id;
         this.date = date;
+        Log.i("type",type);
     }
 
     @Override
@@ -50,6 +62,7 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+
         final int p1 = position*2;
         final int p2 = position*2 +1;
         if(position*2 < templates.size()) {
@@ -70,8 +83,8 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
 
                         Intent intent = new Intent(context, Message_Activity.class);
                         intent.putExtra("type",type);
-                        intent.putExtra("id",id);
                         intent.putExtra("temp",p1);
+                        intent.putIntegerArrayListExtra("empIds",empIds);
                         intent.putExtra("date",date);
                         context.startActivity(intent);
                     }
@@ -96,8 +109,8 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
 
                         Intent intent = new Intent(context, Message_Activity.class);
                         intent.putExtra("type",type);
-                        intent.putExtra("id",id);
                         intent.putExtra("temp",p2);
+                        intent.putIntegerArrayListExtra("empIds",empIds);
                         intent.putExtra("date",date);
                         context.startActivity(intent);
                     }

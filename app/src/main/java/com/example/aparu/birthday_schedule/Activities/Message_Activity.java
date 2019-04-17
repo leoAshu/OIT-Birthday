@@ -30,11 +30,8 @@ import retrofit2.Response;
 
 public class Message_Activity extends AppCompatActivity {
 
-    ImageView back_switch;
     Button send_wishes;
     ImageView template;
-    TextView title;
-
     String type;
     int tempId;
     ArrayList<Integer> empIds = new ArrayList<>();
@@ -45,17 +42,18 @@ public class Message_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_);
 
-        back_switch = findViewById(R.id.back_switch);
         send_wishes = findViewById(R.id.send_wishes);
-        title = findViewById(R.id.title);
 
         type = getIntent().getStringExtra("type");
+        Log.i("Message type",type);
         tempId = TemplateActivity.templates.get(getIntent().getIntExtra("temp", 0)).getId();
-        empIds.add(getIntent().getIntExtra("id", 0));
-        Log.i("Emp_id", "" + getIntent().getIntExtra("id", 0));
-        if (!type.equalsIgnoreCase("edit"))
+
+
+        if (!type.equalsIgnoreCase("edit")){
+
             date = getIntent().getStringExtra("date");
-        //Log.i("date",date);
+            empIds = getIntent().getIntegerArrayListExtra("empIds");
+        }
 
         if (type.equalsIgnoreCase("schedule")) {
 
@@ -63,7 +61,6 @@ public class Message_Activity extends AppCompatActivity {
 
         } else if (type.equalsIgnoreCase("edit")) {
 
-            title.setText("Edit");
             send_wishes.setText("Save");
         } else {
 
@@ -73,9 +70,9 @@ public class Message_Activity extends AppCompatActivity {
         send_wishes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("OnClick",type);
                 if(type.equalsIgnoreCase("edit")){
 
-                    Log.i("Save","ScheduleId: "+getIntent().getIntExtra("id",0)+" Type: "+getIntent().getStringExtra("type"));
                     String token = GoogleSignIn.getLastSignedInAccount(getApplicationContext()).getIdToken();
                     int scheduleId = getIntent().getIntExtra("id",0);
                     Call<ResponseBody> call = RetrofitClient.getInstance()
@@ -117,25 +114,6 @@ public class Message_Activity extends AppCompatActivity {
             }
         });
 
-        back_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(type.equalsIgnoreCase("edit")){
-
-                    Intent select_template = new Intent(getApplicationContext(), Scheduled_Wishes.class);
-                    startActivity(select_template);
-                    finish();
-
-                }else{
-
-                    Intent select_template = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(select_template);
-                    finish();
-                }
-            }
-        });
-
         template = findViewById(R.id.template);
 
         int p = getIntent().getIntExtra("temp", 0);
@@ -146,12 +124,13 @@ public class Message_Activity extends AppCompatActivity {
     }
 
     public void sendEmail() {
+
         if (type.equalsIgnoreCase("Schedule")) {
 
             Call<EmailResponse> call = RetrofitClient.getInstance()
                     .getApi()
                     .schedule(GoogleSignIn.getLastSignedInAccount(this).getIdToken(), tempId, empIds, date, "");
-            //Log.i("date",date);
+
             call.enqueue(new Callback<EmailResponse>() {
                 @Override
                 public void onResponse(Call<EmailResponse> call, Response<EmailResponse> response) {
@@ -191,9 +170,17 @@ public class Message_Activity extends AppCompatActivity {
                 public void onResponse(Call<EmailResponse> call, Response<EmailResponse> response) {
 
                     if (response.code() == 200) {
+
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(Message_Activity.this, HomeActivity.class));
+                    } else if (response.code() == 401) {
+
+                        Toast.makeText(getApplicationContext(), "Token Expired. Please Login Again.", Toast.LENGTH_LONG).show();
+                        logout();
+                    } else {
+
+                        EmailResponse emailResponse = response.body();
+                        Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -202,7 +189,8 @@ public class Message_Activity extends AppCompatActivity {
 
                 }
             });
-
+            startActivity(new Intent(Message_Activity.this, HomeActivity.class));
+            finish();
         }
     }
 

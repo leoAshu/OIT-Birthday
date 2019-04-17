@@ -6,48 +6,6 @@
     android:layout_height="match_parent"
     android:background="#f5f5f0"
     tools:context="com.example.aparu.birthday_schedule.Activities.Message_Activity">
-    <android.support.constraint.ConstraintLayout
-        android:layout_width="wrap_content"
-        android:layout_height="60dp"
-        android:background="#0c3551"
-        android:id="@+id/constraintLayout">
-    </android.support.constraint.ConstraintLayout>
-
-
-    <ImageView
-        android:id="@+id/back_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_arrow_back"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginStart="16dp"
-        />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/send_wishes"
-        android:layout_alignLeft="@+id/send_wishes"
-        android:layout_alignTop="@+id/back_switch"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:text="Message"
-        android:textColor="#FFFF"
-        android:textSize="20dp"
-        android:textAllCaps="true"
-        app:layout_constraintBottom_toBottomOf="@+id/constraintLayout"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toRightOf="@+id/back_switch"
-        app:layout_constraintRight_toRightOf="@+id/constraintLayout"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/send_wishes"
@@ -68,7 +26,8 @@
         android:id="@+id/template"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="0dp"
         android:scaleType="fitXY" />
 
 

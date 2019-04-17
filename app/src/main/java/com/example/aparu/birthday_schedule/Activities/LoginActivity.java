@@ -94,7 +94,6 @@ public class LoginActivity extends AppCompatActivity {
                     TemplateResponse templateResponse = response.body();
 
                     TemplateActivity.templates = templateResponse.getTemplates();
-                    Log.i("Template Dl", TemplateActivity.templates.get(0).getTemplate());
                     GetTemplate task = new GetTemplate();
                     task.execute(TemplateActivity.templates);
 
@@ -138,11 +137,6 @@ public class LoginActivity extends AppCompatActivity {
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                 final GoogleSignInAccount googleSignInAccount = task.getResult();
                 String token = googleSignInAccount.getIdToken();
-                //String token = googleSignInAccount.getServerAuthCode();
-                Log.i("GoogleAccount", googleSignInAccount.toString());
-                Log.i("AuthCode",googleSignInAccount.getServerAuthCode());
-
-                //Log.i("Error","Google1");
 
                 Call<VerifyResponse> call = RetrofitClient.getInstance()
                         .getApi()
@@ -153,19 +147,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call<VerifyResponse> call, @NonNull Response<VerifyResponse> response) {
                         if (response.code() == 200) {
 
-//                            Toast.makeText(LoginActivity.this, response.toString(), Toast.LENGTH_SHORT).show();
-                            //Log.i("Response", response.body().toString());
-
                             VerifyResponse verifyResponse = response.body();
                             User user = verifyResponse.getUser();
 
                             SharedPreferences sharedPreferences = getSharedPreferences("MyPref", MODE_PRIVATE);
                             sharedPreferences.edit().putString("User", user.toString()).apply();
-
-                            Log.i("message", "" + verifyResponse.getMessage());
-                            Log.i("username", "" + user.getUser_name());
-                            Log.i("success", "" + verifyResponse.getSuccess());
-                            Log.i("userId", "" + user.getUser_id());
 
                             onLoggedIn();
 

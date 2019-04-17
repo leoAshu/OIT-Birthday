@@ -38,12 +38,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class HomeActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, MyAdapter.ButtonStatus {
 
     ImageView calender_date;
     TextView current_date;
     Button schedule_birthday;
     ImageView nothingFound;
+    Button makeWish;
 
     private static RecyclerView recyclerView;
     private static MyAdapter adapter;
@@ -53,6 +54,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
     Calendar today;
     String currentDate;
     String selDate;
+    MyAdapter.ButtonStatus buttonStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +65,15 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         toolbar.setTitle("SEND WISHES");
         setSupportActionBar(toolbar);
         nothingFound = findViewById(R.id.nothingFound);
+        makeWish = findViewById(R.id.makeWish);
+
+        buttonStatus = this;
 
         current_date = findViewById(R.id.current_date);
         Calendar calendar = Calendar.getInstance();
         currentDate = DateFormat.getDateInstance().format(calendar.getTime());
         current_date.setText("Today's Date - " + currentDate);
         today = calendar;
-        Log.i("today","");
 
         calender_date = findViewById(R.id.calender_date);
 
@@ -81,14 +85,17 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
+        selDate = currentDate;
 
         FetchList task = new FetchList();
         task.execute();
 
         employees.clear();
+        HomeActivity.unSelect();
+        MyAdapter.reset();
 
         recyclerView = findViewById(R.id.recyclerView);
-        adapter = new MyAdapter(employees, this,type,currentDate);
+        adapter = new MyAdapter(employees, this,type, buttonStatus);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -107,6 +114,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
 
     }
 
+
     @Override
     public void onDateSet(DatePicker view, final int year, final int month, final int dayOfMonth) {
 
@@ -114,6 +122,11 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+        makeWish.setVisibility(View.INVISIBLE);
+
+        MyAdapter.reset();
+        HomeActivity.unSelect();
 
         final int tDay = today.get(Calendar.DAY_OF_MONTH);
         final int tMonth = today.get(Calendar.MONTH);
@@ -140,6 +153,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
 
                     employees.clear();
                     HomeActivity.employees = response.body().getEmployees();
+                    HomeActivity.unSelect();
                     showList(t,selDate);
                     nothingFound.setVisibility(View.INVISIBLE);
 
@@ -186,6 +200,43 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void update(int count) {
+
+        if(count>0){
+
+            makeWish.setVisibility(View.VISIBLE);
+        }else{
+
+            makeWish.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public static void unSelect(){
+        for(int i = 0; i<employees.size(); i++){
+            employees.get(i).setSelected(false);
+        }
+    }
+
+    public void makeWish(View view){
+
+
+        Intent intent = new Intent(HomeActivity.this, TemplateActivity.class);
+        ArrayList<Integer> empIds = new ArrayList<>();
+        for(Employee emp: employees){
+            if(emp.getSelected()){
+                empIds.add(emp.getId());
+            }
+        }
+
+        intent.putIntegerArrayListExtra("empIds",empIds);
+        intent.putExtra("type",type);
+        intent.putExtra("date",selDate);
+        startActivity(intent);
+        finish();
+
+    }
+
     class FetchList extends AsyncTask<Void, Void, Void> {
 
         @Override
@@ -203,6 +254,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
 
                         BirthdayResponse birthdayResponse = response.body();
                         HomeActivity.employees = birthdayResponse.getEmployees();
+                        HomeActivity.unSelect();
 
                         nothingFound.setVisibility(View.INVISIBLE);
 
@@ -261,8 +313,8 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
 
     public void showList(String type, String date){
 
-
-        Log.i("Type",type);
+        this.type = type;
+        makeWish.setText(type);
         if(HomeActivity.employees.isEmpty()){
 
             adapter.notifyDataSetChanged();
@@ -272,7 +324,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         }else{
             nothingFound.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
-            adapter = new MyAdapter(HomeActivity.employees, getApplicationContext(),type,date);
+            adapter = new MyAdapter(HomeActivity.employees, getApplicationContext(),type, buttonStatus);
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
