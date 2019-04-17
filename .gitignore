@@ -1,0 +1,11 @@
+.gradle
+.idea
+gradle
+build
+local.properties
+*.iml
+*.bak
+#*Test.java
+#*Tests.java
+#gradlew
+#gradlew.bat
