@@ -3,6 +3,7 @@ package com.example.aparu.birthday_schedule.Activities;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,6 +55,8 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
     Calendar today;
     String currentDate;
     String selDate;
+    boolean doubleBackToExitPressedOnce = false;
+
     MyAdapter.ButtonStatus buttonStatus;
 
     @Override
@@ -72,7 +75,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         current_date = findViewById(R.id.current_date);
         Calendar calendar = Calendar.getInstance();
         currentDate = DateFormat.getDateInstance().format(calendar.getTime());
-        current_date.setText("Today's Date - " + currentDate);
+        current_date.setText("Today's Date: " + currentDate);
         today = calendar;
 
         calender_date = findViewById(R.id.calender_date);
@@ -87,8 +90,16 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         });
         selDate = currentDate;
 
-        FetchList task = new FetchList();
-        task.execute();
+        try{
+
+            FetchList task = new FetchList();
+            task.execute();
+
+        }catch (Exception e){
+
+            e.printStackTrace();
+        }
+
 
         employees.clear();
         HomeActivity.unSelect();
@@ -123,6 +134,8 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+        final String[] months = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
+
         makeWish.setVisibility(View.INVISIBLE);
 
         MyAdapter.reset();
@@ -132,8 +145,10 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         final int tMonth = today.get(Calendar.MONTH);
         final int tYear = today.get(Calendar.YEAR);
 
+
         final String date = year+"-"+(month+1)+"-"+dayOfMonth;
         selDate = date;
+
 
         Call<BirthdayResponse> call = RetrofitClient
                 .getInstance()
@@ -147,8 +162,15 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
             public void onResponse(Call<BirthdayResponse> call, Response<BirthdayResponse> response) {
 
                 String t = "Schedule";
-                if (tDay == dayOfMonth && tMonth == month && tYear == year)
+                String d = dayOfMonth+"-"+months[month]+"-"+year;
+                if (tDay == dayOfMonth && tMonth == month && tYear == year){
+
+                    current_date.setText("Today's Date: " + d);
                     t = "MakeWish";
+                }else{
+                    current_date.setText("Date: "+d);
+                }
+
                 if(response.code() == 200) {
 
                     employees.clear();
@@ -233,7 +255,6 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         intent.putExtra("type",type);
         intent.putExtra("date",selDate);
         startActivity(intent);
-        finish();
 
     }
 
@@ -314,7 +335,9 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
     public void showList(String type, String date){
 
         this.type = type;
-        makeWish.setText(type);
+        makeWish.setText("Make A Wish");
+        if(type.equalsIgnoreCase("makeWish"))
+            makeWish.setText("Make A Wish");
         if(HomeActivity.employees.isEmpty()){
 
             adapter.notifyDataSetChanged();
@@ -328,5 +351,24 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
             recyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+        
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
     }
 }

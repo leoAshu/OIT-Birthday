@@ -1,6 +1,5 @@
 package com.example.aparu.birthday_schedule.Adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -29,12 +28,19 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     ArrayList<Drawable> drawables;
     ArrayList<Template> templates;
 
-    public ScheduleAdapter(ArrayList<Employee> employees, Context context, ArrayList<Drawable> drawables, ArrayList<Template> templates){
+    EditCallBack callBack;
+
+    public interface EditCallBack{
+        void edit(int id);
+    }
+
+    public ScheduleAdapter(ArrayList<Employee> employees, Context context, ArrayList<Drawable> drawables, ArrayList<Template> templates, EditCallBack callBack){
         Log.i("Adapter Size",""+employees.size());
         this.employees = employees;
         this.context = context;
         this.templates = templates;
         this.drawables = drawables;
+        this.callBack = callBack;
     }
 
     @Override
@@ -67,10 +73,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         viewHolder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, TemplateActivity.class);
-                intent.putExtra("Edit","edit");
-                intent.putExtra("ScheduleId",employees.get(i).getId());
-                context.startActivity(intent);
+                callBack.edit(employees.get(i).getId());
             }
         });
 

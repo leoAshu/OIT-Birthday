@@ -25,15 +25,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Scheduled_Wishes extends AppCompatActivity {
+public class Scheduled_Wishes extends AppCompatActivity implements ScheduleAdapter.EditCallBack {
 
-    ImageView back_switch1;
     TextView schedule_page_text;
     RecyclerView recyclerView;
     ImageView nothingFound;
 
     ArrayList<Employee> scheduleList = new ArrayList<>();
     ScheduleAdapter adapter;
+    ScheduleAdapter.EditCallBack callBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +44,11 @@ public class Scheduled_Wishes extends AppCompatActivity {
 
         String token = GoogleSignIn.getLastSignedInAccount(this).getIdToken();
 
+        callBack = this;
+
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new ScheduleAdapter(scheduleList,getApplicationContext(),TemplateActivity.drawables,TemplateActivity.templates);
+        adapter = new ScheduleAdapter(scheduleList,getApplicationContext(),TemplateActivity.drawables,TemplateActivity.templates, callBack);
         recyclerView.setAdapter(adapter);
 
         Call<BirthdayResponse> call = RetrofitClient.getInstance()
@@ -66,7 +68,7 @@ public class Scheduled_Wishes extends AppCompatActivity {
 //                    Log.i("Schedule DOB",""+scheduleList.get(0).getEmp_dob());
 //                    Log.i("Schedule Template",""+scheduleList.get(0).getTemplate_id());
 
-                    adapter = new ScheduleAdapter(scheduleList,getApplicationContext(),TemplateActivity.drawables,TemplateActivity.templates);
+                    adapter = new ScheduleAdapter(scheduleList,getApplicationContext(),TemplateActivity.drawables,TemplateActivity.templates, callBack);
                     recyclerView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }else if(response.code() == 404){
@@ -85,24 +87,23 @@ public class Scheduled_Wishes extends AppCompatActivity {
             }
         });
 
-
-        back_switch1 = findViewById(R.id.back_switch1);
         schedule_page_text = findViewById(R.id.schedule_page_text);
 
-        back_switch1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent schedule_wish = new Intent(getApplicationContext(), HomeActivity.class);
-                startActivity(schedule_wish);
-                finish();
-            }
-        });
     }
     public void logout(){
 
         LoginActivity.googleSignInClient.signOut();
         Intent intent = new Intent(Scheduled_Wishes.this,LoginActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void edit(int id) {
+
+        Intent intent = new Intent(Scheduled_Wishes.this, TemplateActivity.class);
+        intent.putExtra("Edit","edit");
+        intent.putExtra("ScheduleId",id);
         startActivity(intent);
         finish();
     }

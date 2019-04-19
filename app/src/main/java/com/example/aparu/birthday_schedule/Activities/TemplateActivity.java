@@ -29,12 +29,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class TemplateActivity extends AppCompatActivity {
+public class TemplateActivity extends AppCompatActivity implements TemplateAdapter.TemplateSelect {
 
-    ImageView back_switch;
     TextView  select_template;
     static  ArrayList<Drawable> drawables = new ArrayList<>();
     static ArrayList<Template> templates = new ArrayList<>();
+
+    TemplateAdapter.TemplateSelect templateSelect;
 
     RecyclerView recyclerView;
 
@@ -46,8 +47,9 @@ public class TemplateActivity extends AppCompatActivity {
         String type = getIntent().getStringExtra("type");
         int id = 0;
 
-        back_switch = findViewById(R.id.back_switch);
         select_template = findViewById(R.id.select_template);
+
+        templateSelect = this;
 
         recyclerView = findViewById(R.id.recyclerView);
 
@@ -57,34 +59,16 @@ public class TemplateActivity extends AppCompatActivity {
 
             type = "edit";
             id = getIntent().getIntExtra("ScheduleId",0);
-            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, id, date);
+            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, id, date, templateSelect);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
         }else{
 
             ArrayList<Integer> empIds = getIntent().getIntegerArrayListExtra("empIds");
-            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, empIds, date);
+            TemplateAdapter adapter = new TemplateAdapter(drawables, getApplicationContext(), type, empIds, date, templateSelect);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(adapter);
         }
-
-
-        back_switch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(getIntent().getStringExtra("Edit")!=null){
-
-                    Intent homeActivity = new Intent(getApplicationContext(), Scheduled_Wishes.class);
-                    startActivity(homeActivity);
-                    finish();
-                }else{
-                    Intent homeActivity = new Intent(getApplicationContext(), HomeActivity.class);
-                    startActivity(homeActivity);
-                    finish();
-                }
-            }
-        });
 
     }
 
@@ -96,4 +80,26 @@ public class TemplateActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void changeActivity(String type, int id, int temp) {
+
+        Intent intent = new Intent(TemplateActivity.this, Message_Activity.class);
+        intent.putExtra("type",type);
+        intent.putExtra("id",id);
+        intent.putExtra("temp",temp);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void changeActivity(String type, int temp, ArrayList<Integer> empIds, String date) {
+
+        Intent intent = new Intent(TemplateActivity.this, Message_Activity.class);
+        intent.putExtra("type",type);
+        intent.putExtra("temp",temp);
+        intent.putIntegerArrayListExtra("empIds",empIds);
+        intent.putExtra("date",date);
+        startActivity(intent);
+        finish();
+    }
 }

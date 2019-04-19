@@ -29,23 +29,31 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
     int id;
     String date;
     ArrayList<Integer> empIds;
+    TemplateSelect templateSelect;
 
-    public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, ArrayList<Integer> empIds, String date) {
+    public interface TemplateSelect{
+        void changeActivity(String type, int id, int temp);
+        void changeActivity(String type, int temp, ArrayList<Integer> empIds, String date);
+    }
+
+    public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, ArrayList<Integer> empIds, String date,TemplateSelect templateSelect) {
 
         this.templates = templates;
         this.context = context;
         this.type = type;
         this.date = date;
         this.empIds = empIds;
+        this.templateSelect = templateSelect;
     }
 
-    public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, int id, String date) {
+    public TemplateAdapter(ArrayList<Drawable> templates, Context context, String type, int id, String date, TemplateSelect templateSelect) {
 
         this.templates = templates;
         this.context = context;
         this.type = type;
         this.id = id;
         this.date = date;
+        this.templateSelect = templateSelect;
         Log.i("type",type);
     }
 
@@ -73,20 +81,11 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
 
                     if(type.equalsIgnoreCase("edit")){
 
-                        Intent intent = new Intent(context, Message_Activity.class);
-                        intent.putExtra("type",type);
-                        intent.putExtra("id",id);
-                        intent.putExtra("temp",p1);
-                        context.startActivity(intent);
+                        templateSelect.changeActivity(type, id, p1);
 
                     }else{
 
-                        Intent intent = new Intent(context, Message_Activity.class);
-                        intent.putExtra("type",type);
-                        intent.putExtra("temp",p1);
-                        intent.putIntegerArrayListExtra("empIds",empIds);
-                        intent.putExtra("date",date);
-                        context.startActivity(intent);
+                        templateSelect.changeActivity(type, p1, empIds, date);
                     }
                 }
             });
@@ -99,20 +98,11 @@ public class TemplateAdapter extends RecyclerView.Adapter<TemplateAdapter.ViewHo
 
                     if(type.equalsIgnoreCase("edit")){
 
-                        Intent intent = new Intent(context, Message_Activity.class);
-                        intent.putExtra("type",type);
-                        intent.putExtra("id",id);
-                        intent.putExtra("temp",p2);
-                        context.startActivity(intent);
+                        templateSelect.changeActivity(type, id, p2);
 
                     }else{
 
-                        Intent intent = new Intent(context, Message_Activity.class);
-                        intent.putExtra("type",type);
-                        intent.putExtra("temp",p2);
-                        intent.putIntegerArrayListExtra("empIds",empIds);
-                        intent.putExtra("date",date);
-                        context.startActivity(intent);
+                        templateSelect.changeActivity(type, p2, empIds, date);
                     }
                 }
             });

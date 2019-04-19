@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -39,9 +40,10 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    SignInButton login;
+    //SignInButton login;
     static GoogleSignInClient googleSignInClient;
     static ProgressDialog dialog;
+    static Button login;
 
 
     @Override
@@ -131,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.i("ResultCode",""+resultCode);
 
         if (resultCode == Activity.RESULT_OK) {
-            Log.i("Error","Google");
+
             if (requestCode == 1) {
 
                 Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
@@ -169,11 +171,14 @@ public class LoginActivity extends AppCompatActivity {
                         googleSignInClient.signOut();
                         dialog.dismiss();
                         Toast.makeText(getApplicationContext(),"Verification Failed. Login Again.",Toast.LENGTH_LONG).show();
-                        Log.i("Error","Verify fail! Login Again.");
+                        Log.i("Error","Verification failed! Login Again.");
                     }
 
                 });
             }
+        }else{
+
+            dialog.dismiss();
         }
     }
 
