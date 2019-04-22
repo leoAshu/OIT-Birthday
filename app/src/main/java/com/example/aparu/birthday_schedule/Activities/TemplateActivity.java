@@ -15,19 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aparu.birthday_schedule.API.GoogleClient;
 import com.example.aparu.birthday_schedule.API.RetrofitClient;
 import com.example.aparu.birthday_schedule.API.TemplateResponse;
 import com.example.aparu.birthday_schedule.Adapters.TemplateAdapter;
 import com.example.aparu.birthday_schedule.Models.Template;
 import com.example.aparu.birthday_schedule.R;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class TemplateActivity extends AppCompatActivity implements TemplateAdapter.TemplateSelect {
 
@@ -74,7 +69,7 @@ public class TemplateActivity extends AppCompatActivity implements TemplateAdapt
 
     public void logout(){
 
-        LoginActivity.googleSignInClient.signOut();
+        GoogleClient.getInstance(this).getClient().signOut();
         Intent intent = new Intent(TemplateActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();

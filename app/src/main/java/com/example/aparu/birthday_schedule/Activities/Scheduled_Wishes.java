@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aparu.birthday_schedule.API.BirthdayResponse;
+import com.example.aparu.birthday_schedule.API.GoogleClient;
 import com.example.aparu.birthday_schedule.API.RetrofitClient;
 import com.example.aparu.birthday_schedule.Activities.HomeActivity;
 import com.example.aparu.birthday_schedule.Adapters.ScheduleAdapter;
@@ -92,7 +93,7 @@ public class Scheduled_Wishes extends AppCompatActivity implements ScheduleAdapt
     }
     public void logout(){
 
-        LoginActivity.googleSignInClient.signOut();
+        GoogleClient.getInstance(this).getClient().signOut();
         Intent intent = new Intent(Scheduled_Wishes.this,LoginActivity.class);
         startActivity(intent);
         finish();

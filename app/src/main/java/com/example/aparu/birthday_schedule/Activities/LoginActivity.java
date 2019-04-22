@@ -12,22 +12,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.aparu.birthday_schedule.API.GoogleClient;
 import com.example.aparu.birthday_schedule.API.TemplateResponse;
 import com.example.aparu.birthday_schedule.Models.Template;
 import com.example.aparu.birthday_schedule.R;
 import com.example.aparu.birthday_schedule.API.RetrofitClient;
 import com.example.aparu.birthday_schedule.Models.User;
 import com.example.aparu.birthday_schedule.API.VerifyResponse;
-import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.Task;
 
 import java.io.InputStream;
@@ -40,11 +37,9 @@ import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    //SignInButton login;
     static GoogleSignInClient googleSignInClient;
     static ProgressDialog dialog;
     static Button login;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         dialog.setCancelable(false);
         dialog.setInverseBackgroundForced(true);
 
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getResources().getString(R.string.ClientId))
-                .requestServerAuthCode(getResources().getString(R.string.ClientId))
-                .requestEmail()
-                .build();
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        googleSignInClient = GoogleClient.getInstance(this).getClient();
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +88,6 @@ public class LoginActivity extends AppCompatActivity {
                     GetTemplate task = new GetTemplate();
                     task.execute(TemplateActivity.templates);
 
-
                 }
             }
 
@@ -115,18 +103,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
-
-        if(googleSignInAccount != null)
-        {
-            onLoggedIn();
-        }
-
-    }
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

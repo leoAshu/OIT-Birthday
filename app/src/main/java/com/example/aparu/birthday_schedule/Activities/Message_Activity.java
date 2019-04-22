@@ -177,10 +177,14 @@ public class Message_Activity extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), "Token Expired. Please Login Again.", Toast.LENGTH_LONG).show();
                         logout();
-                    } else {
+                    } else if(response.code()==422){
+
+                        Toast.makeText(Message_Activity.this, "Invalid E-mail in DB", Toast.LENGTH_SHORT).show();
+                    }else{
 
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+
                     }
                 }
 

@@ -22,17 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aparu.birthday_schedule.API.BirthdayResponse;
+import com.example.aparu.birthday_schedule.API.GoogleClient;
 import com.example.aparu.birthday_schedule.API.RetrofitClient;
 import com.example.aparu.birthday_schedule.Adapters.MyAdapter;
 import com.example.aparu.birthday_schedule.Models.Employee;
-import com.example.aparu.birthday_schedule.Models.ListItem;
 import com.example.aparu.birthday_schedule.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -214,7 +213,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         switch (item.getItemId()) {
             case R.id.lock:
 
-                LoginActivity.googleSignInClient.signOut();
+                GoogleClient.getInstance(this).getClient().signOut();
                 Intent schedule = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(schedule);
                 finish();
@@ -300,33 +299,9 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Call<ResponseBody> call = RetrofitClient.getInstance()
-                .getApi()
-                .verify(GoogleSignIn.getLastSignedInAccount(getApplicationContext()).getIdToken());
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if(response.code()!=200){
-
-                    Toast.makeText(getApplicationContext(),"Token Expired. Please Login Again.",Toast.LENGTH_LONG).show();
-                    logout();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
-        });
-    }
     public void logout(){
 
-        LoginActivity.googleSignInClient.signOut();
+       GoogleClient.getInstance(this).getClient().signOut();
         Intent intent = new Intent(HomeActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();
@@ -335,7 +310,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
     public void showList(String type, String date){
 
         this.type = type;
-        makeWish.setText("Make A Wish");
+        makeWish.setText(type);
         if(type.equalsIgnoreCase("makeWish"))
             makeWish.setText("Make A Wish");
         if(HomeActivity.employees.isEmpty()){
@@ -359,7 +334,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
             super.onBackPressed();
             return;
         }
-        
+
         this.doubleBackToExitPressedOnce = true;
         Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
 
