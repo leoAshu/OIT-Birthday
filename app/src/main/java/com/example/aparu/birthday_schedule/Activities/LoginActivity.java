@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
             }
         }else{
-
+            Toast.makeText(LoginActivity.this,""+resultCode,Toast.LENGTH_LONG).show();
             dialog.dismiss();
         }
     }

@@ -86,6 +86,7 @@ public class Message_Activity extends AppCompatActivity {
 
                                 Toast.makeText(getApplicationContext(),"Updated Successfully",Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getApplicationContext(),Scheduled_Wishes.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                                 finish();
 
@@ -97,6 +98,7 @@ public class Message_Activity extends AppCompatActivity {
 
                                 Toast.makeText(getApplicationContext(),"Update Failed",Toast.LENGTH_LONG).show();
                                 Intent intent = new Intent(getApplicationContext(),Scheduled_Wishes.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                                 finish();
                             }
@@ -156,7 +158,9 @@ public class Message_Activity extends AppCompatActivity {
                 }
             });
 
-            startActivity(new Intent(Message_Activity.this, HomeActivity.class));
+            Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
 
         } else {
@@ -193,7 +197,9 @@ public class Message_Activity extends AppCompatActivity {
 
                 }
             });
-            startActivity(new Intent(Message_Activity.this, HomeActivity.class));
+            Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
             finish();
         }
     }
@@ -202,6 +208,7 @@ public class Message_Activity extends AppCompatActivity {
 
         LoginActivity.googleSignInClient.signOut();
         Intent intent = new Intent(Message_Activity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
