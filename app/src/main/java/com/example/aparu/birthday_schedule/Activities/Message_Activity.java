@@ -140,6 +140,10 @@ public class Message_Activity extends AppCompatActivity {
                     if (response.code() == 200) {
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
 
                     } else if (response.code() == 401) {
                         Toast.makeText(getApplicationContext(), "Token Expired. Please Login Again.", Toast.LENGTH_LONG).show();
@@ -148,6 +152,10 @@ public class Message_Activity extends AppCompatActivity {
 
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     }
                 }
 
@@ -157,11 +165,6 @@ public class Message_Activity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Response Fail", Toast.LENGTH_SHORT).show();
                 }
             });
-
-            Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
 
         } else {
 
@@ -177,6 +180,10 @@ public class Message_Activity extends AppCompatActivity {
 
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     } else if (response.code() == 401) {
 
                         Toast.makeText(getApplicationContext(), "Token Expired. Please Login Again.", Toast.LENGTH_LONG).show();
@@ -188,6 +195,10 @@ public class Message_Activity extends AppCompatActivity {
 
                         EmailResponse emailResponse = response.body();
                         Toast.makeText(Message_Activity.this, emailResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
 
                     }
                 }
@@ -197,10 +208,7 @@ public class Message_Activity extends AppCompatActivity {
 
                 }
             });
-            Intent intent = new Intent(Message_Activity.this, HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
+
         }
     }
 
