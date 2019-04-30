@@ -320,6 +320,7 @@ public class HomeActivity extends AppCompatActivity implements DatePickerDialog.
             recyclerView.setVisibility(View.INVISIBLE);
 
         }else{
+
             nothingFound.setVisibility(View.INVISIBLE);
             recyclerView.setVisibility(View.VISIBLE);
             adapter = new MyAdapter(HomeActivity.employees, getApplicationContext(),type, buttonStatus);
